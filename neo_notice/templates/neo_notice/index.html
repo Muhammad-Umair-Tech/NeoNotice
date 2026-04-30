@@ -1,0 +1,19 @@
+{% load static %} {% load vite %}
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- <script>
+      src = "{% static 'neo_notice/index-BccT7Rx3.js' %}";
+    </script>
+    <link
+      rel="stylesheet"
+      href="{% static 'neo_notice/index-C5vDCppG.css' %}"
+    /> -->
+    <title>NeoNotice</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    {% vite_assets 'src/main.jsx' %}
+  </body>
+</html>
