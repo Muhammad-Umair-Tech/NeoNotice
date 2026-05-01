@@ -1,0 +1,259 @@
+/* ─── Board Page ─────────────────────────────────────────────────── */
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--off-white);
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(30, 64, 128, 0.08) 0%, transparent 70%);
+}
+
+/* ─── Header ─────────────────────────────────────────────────────── */
+.header {
+  background: linear-gradient(135deg, var(--navy-800) 0%, var(--navy-600) 100%);
+  color: var(--white);
+  box-shadow: 0 4px 24px rgba(5, 13, 26, 0.25);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  animation: slideDown 0.5s ease both;
+}
+
+.headerInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.brandBlock {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.logoMark {
+  width: 44px;
+  height: 44px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+}
+
+.brandName {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  color: var(--white);
+}
+
+.brandSub {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--navy-200);
+  letter-spacing: 0.05em;
+  margin-top: 3px;
+  text-transform: uppercase;
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.dateBadge {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--navy-200);
+  background: rgba(255, 255, 255, 0.08);
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.adminBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 18px;
+  background: rgba(255, 255, 255, 0.13);
+  color: var(--white);
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: all var(--transition);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.adminBtn:hover {
+  background: rgba(255, 255, 255, 0.22);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-1px);
+}
+
+/* ─── Live Banner ────────────────────────────────────────────────── */
+.liveBanner {
+  background: rgba(0, 0, 0, 0.18);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 8px 32px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.75rem;
+  color: var(--navy-200);
+  letter-spacing: 0.04em;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+}
+
+.liveDot {
+  width: 7px;
+  height: 7px;
+  background: #4ade80;
+  border-radius: 50%;
+  flex-shrink: 0;
+  animation: pulse-ring 2s infinite;
+}
+
+.countChip {
+  margin-left: auto;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2px 10px;
+  border-radius: 99px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* ─── Main ───────────────────────────────────────────────────────── */
+.main {
+  flex: 1;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 40px 32px;
+}
+
+/* ─── Notice Grid ────────────────────────────────────────────────── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 24px;
+}
+
+/* ─── State Containers ───────────────────────────────────────────── */
+.stateContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
+
+/* Skeleton loading */
+.skeletonGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 24px;
+  width: 100%;
+}
+
+.skeleton {
+  height: 200px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(90deg, var(--gray-100) 25%, var(--gray-200) 50%, var(--gray-100) 75%);
+  background-size: 400px 100%;
+  animation: shimmer 1.4s infinite;
+}
+
+/* Error box */
+.errorBox {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  color: var(--danger);
+  background: var(--danger-light);
+  padding: 48px;
+  border-radius: var(--radius-xl);
+  border: 1.5px solid #fca5a5;
+}
+
+.errorBox p {
+  color: var(--gray-800);
+  font-size: 0.9375rem;
+}
+
+/* Empty state */
+.emptyState {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  color: var(--gray-400);
+  padding: 64px 32px;
+}
+
+.emptyIcon {
+  width: 80px;
+  height: 80px;
+  background: var(--navy-50);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--navy-300);
+  margin-bottom: 8px;
+}
+
+.emptyState h3 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: var(--gray-600);
+}
+
+.emptyState p {
+  font-size: 0.9375rem;
+  max-width: 360px;
+  line-height: 1.7;
+}
+
+/* ─── Footer ─────────────────────────────────────────────────────── */
+.footer {
+  text-align: center;
+  padding: 20px;
+  font-size: 0.75rem;
+  color: var(--gray-400);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  border-top: 1px solid var(--gray-200);
+  background: var(--white);
+  font-family: var(--font-mono);
+}
+
+/* ─── Responsive ─────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .headerInner { padding: 16px 20px; }
+  .liveBanner { padding: 8px 20px; }
+  .main { padding: 24px 16px; }
+  .brandName { font-size: 1.2rem; }
+  .dateBadge { display: none; }
+  .grid { grid-template-columns: 1fr; }
+}

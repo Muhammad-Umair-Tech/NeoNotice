@@ -11,11 +11,13 @@ def index(request):
 
 def get_notices(request):
     notices = []
-    for notice in models.Notice.objects.filter(is_live = True):
+    for notice in models.Notice.objects.filter(is_live=True):
         notices.append({
+            "id": notice.id,           
             "creator_name": f"{notice.creator.first_name} {notice.creator.last_name}",
             "posted_at": notice.posted_at,
-            "body": notice.body
+            "body": notice.body,
+            "is_live": notice.is_live  
         })
     return JsonResponse({
         "notices_count": len(notices),
@@ -43,7 +45,7 @@ def update_notices(request):
         if not request.user.is_authenticated:
             return JsonResponse({"error": "Login required"}, status=401)
         
-        if request.user.role == "Admin":        
+        if request.user.role == "admin":        
             notice.body = new_body
             notice.posted_at = new_posted_at
             notice.is_live = new_is_Live
@@ -66,7 +68,7 @@ def add_notices(request):
     
 def delete_notices(request):
     if request.method == "PUT":
-        if request.user.role != "Admin":
+        if request.user.role != "admin":
             return JsonResponse({"error": "Unauthorized"}, status=403)
         
         data = json.loads(request.body)
