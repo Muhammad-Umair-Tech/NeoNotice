@@ -5,6 +5,8 @@ import json
 
 from . import models
 
+import requests
+
 # Create your views here.
 def index(request):
     return render(request, "neo_notice/index.html")
@@ -63,7 +65,7 @@ def add_notices(request):
         
         return JsonResponse({"status":True}, status = 200)
     return JsonResponse({"error": "POST request required"}, status=400)
-    
+
 def delete_notices(request):
     if request.method == "PUT":
         if request.user.role != "Admin":
@@ -124,3 +126,16 @@ def views_signup(request):
 def views_logout(request):
     auth_logout(request)
     return JsonResponse({"success": True, "message" : "Logging Out Successful" })
+
+def send_notice_to_esp(request, message):
+    notice_text = message
+    esp_ip = "http://192.168.1.184/get-notice" # The static ESP IP
+    
+    try:
+        # Send notice to ESP
+        # params= handles the '?' and encoding
+        response = requests.get(esp_ip, params={'message': notice_text}, timeout=5)
+        if response.status_code == 200:
+            return JsonResponse({"status": "success"})
+    except requests.exceptions.RequestException as e:
+        return JsonResponse({"status": "error", "message": str(e)})
