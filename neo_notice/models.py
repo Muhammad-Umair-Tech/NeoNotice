@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
-role_choices = [("student","Student"), #(Value stored in db, Value stored in forms & admin)
+role_choices = [("student", "Student"), #(Value stored in db, Value stored in forms & admin)
                 ("admin", "Admin"),
                 ("faculty", "Faculty")]
 
@@ -10,8 +10,8 @@ status_choices = [("pending", "Pending"),
                   ("rejected", "Rejected")]
 
 class User(AbstractUser):
-    role = models.CharField(max_length= 10, choices= role_choices, default = "admin")
-    status = models.CharField(max_length = 10, choices = status_choices, default = "pending")
+    role = models.CharField(max_length=10, choices= role_choices, default="admin")
+    status = models.CharField(max_length =10, choices=status_choices, default="pending")
     def __str__(self):
         return f"ID: {self.id}, Username: {self.username}, Role : {self.role}, Status: {self.status}"
 
