@@ -1,7 +1,9 @@
 from django.contrib.auth import authenticate, login as auth_login , logout as auth_logout
 from django.shortcuts import render
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt  # add this import at top
 import json
+import requests
 
 from . import models
 
@@ -24,15 +26,37 @@ def get_notices(request):
         "notices": notices
     })
 
+@csrf_exempt
+def add_notices(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        
+        body = data.get("body")
+        is_Live = data.get("is_live")
+        
+        notice = models.Notice.objects.create(
+            creator=request.user, 
+            body=body, 
+            is_live=is_Live
+        )
+        
+        # Send to ESP32 immediately after saving
+        if is_Live:
+            send_notice_to_esp(body)  # ← ADD THIS
+        
+        return JsonResponse({"status": True}, status=200)
+    return JsonResponse({"error": "POST request required"}, status=400)
+
+
+@csrf_exempt
 def update_notices(request):
     if request.method == "PUT":
         data = json.loads(request.body)
         
         notice_id = data.get("notice_id")
+        notice = models.Notice.objects.filter(id=notice_id).first()
         
-        notice = models.Notice.objects.filter(id = notice_id).first()
-        
-        if not notice: 
+        if not notice:
             return JsonResponse({"error": "Notice doesn't exist"})
         
         new_body = data.get("body")
@@ -45,27 +69,22 @@ def update_notices(request):
         if not request.user.is_authenticated:
             return JsonResponse({"error": "Login required"}, status=401)
         
-        if request.user.role == "admin":        
+        if request.user.role == "admin":
             notice.body = new_body
             notice.posted_at = new_posted_at
             notice.is_live = new_is_Live
             notice.save()
+            
+            # Send updated notice to ESP32
+            if new_is_Live:
+                send_notice_to_esp(new_body)  # ← ADD THIS
+            
             return JsonResponse({"status": True}, status=200)
-                    
+        
         return JsonResponse({"error": "Unauthorized"}, status=403)
-    
-def add_notices(request):
-    if request.method == "POST":
-        data = json.loads(request.body)
-        
-        body = data.get("body")
-        is_Live = data.get("is_live")
-        
-        notice = models.Notice.objects.create(creator = request.user, body = body, is_live = is_Live)
-        
-        return JsonResponse({"status":True}, status = 200)
-    return JsonResponse({"error": "POST request required"}, status=400)
-    
+
+
+@csrf_exempt
 def delete_notices(request):
     if request.method == "PUT":
         if request.user.role != "admin":
@@ -74,18 +93,19 @@ def delete_notices(request):
         data = json.loads(request.body)
         notice_id = data.get("notice_id")
         notice = models.Notice.objects.filter(id=notice_id).first()
+        
         if not notice:
-            return JsonResponse({
-                "error": "Notice not found."
-            })
+            return JsonResponse({"error": "Notice not found."})
+        
         notice.delete()
-        return JsonResponse({
-            "success": True
-        })
-
-    return JsonResponse({"error": "Put Request Required"}, status = 400)
-  
+        
+        # Notify ESP32 that notice was deleted
+        send_notice_to_esp("Notice removed")  # ← ADD THIS
+        
+        return JsonResponse({"success": True})
     
+    return JsonResponse({"error": "Put Request Required"}, status=400)  
+@csrf_exempt  
 def views_login(request):
     if request.method == "POST":
         username = request.POST["username"]
@@ -126,3 +146,21 @@ def views_signup(request):
 def views_logout(request):
     auth_logout(request)
     return JsonResponse({"success": True, "message" : "Logging Out Successful" })
+
+
+
+ESP_IP = "http://192.168.1.184/get-notice"  # your ESP32 static IP
+
+def send_notice_to_esp(message):
+    try:
+        response = requests.get(
+            ESP_IP, 
+            params={'message': message}, 
+            timeout=5
+        )
+        if response.status_code == 200:
+            print("Notice sent to ESP32 successfully")
+            return True
+    except requests.exceptions.RequestException as e:
+        print(f"Could not reach ESP32: {e}")
+        return False
