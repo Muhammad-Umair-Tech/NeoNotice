@@ -7,6 +7,12 @@ import requests
 
 from . import models
 
+
+def get_all_notices_for_esp(request):
+    notices = []
+    for notice in models.Notice.objects.filter(is_live=True):
+        notices.append(notice.body)
+    return JsonResponse({"notices": notices})
 # Create your views here.
 def index(request):
     return render(request, "neo_notice/index.html")
@@ -149,7 +155,7 @@ def views_logout(request):
 
 
 
-ESP_IP = "http://192.168.1.184/get-notice"  # your ESP32 static IP
+ESP_IP = "http://192.168.100.184/get-notice"  # your ESP32 static IP
 
 def send_notice_to_esp(message):
     try:

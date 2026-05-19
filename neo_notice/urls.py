@@ -11,4 +11,5 @@ urlpatterns = [
     path("add_notices", views.add_notices, name="add_notices"),
     path("update_notices", views.update_notices, name="update_notices"),
     path("delete_notices", views.delete_notices, name="delete_notices"),
+    # path("esp/notices", views.get_all_notices_for_esp, name="esp_notices")
 ]
