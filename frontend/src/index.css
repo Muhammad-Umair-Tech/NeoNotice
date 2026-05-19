@@ -1,0 +1,156 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
+
+/* ─── Design Tokens ─────────────────────────────────────────────── */
+:root {
+  --navy-950: #050d1a;
+  --navy-900: #0a1628;
+  --navy-800: #0f2044;
+  --navy-700: #163060;
+  --navy-600: #1e4080;
+  --navy-500: #2555a8;
+  --navy-400: #3b72d4;
+  --navy-300: #6b9fe8;
+  --navy-200: #a8c8f4;
+  --navy-100: #ddeafc;
+  --navy-50:  #f0f6ff;
+
+  --white:    #ffffff;
+  --off-white: #f7f9fc;
+  --gray-100: #eef1f6;
+  --gray-200: #dde3ed;
+  --gray-400: #8a99b3;
+  --gray-600: #4a5672;
+  --gray-800: #1e2a40;
+
+  --gold:     #f0b429;
+  --gold-light: #fef3c7;
+  --danger:   #dc2626;
+  --danger-light: #fee2e2;
+  --success:  #16a34a;
+  --success-light: #dcfce7;
+
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body:    'DM Sans', system-ui, sans-serif;
+  --font-mono:    'DM Mono', monospace;
+
+  --radius-sm:  4px;
+  --radius-md:  10px;
+  --radius-lg:  18px;
+  --radius-xl:  28px;
+
+  --shadow-card: 0 2px 8px rgba(5, 13, 26, 0.08), 0 8px 32px rgba(5, 13, 26, 0.06);
+  --shadow-elevated: 0 4px 16px rgba(5, 13, 26, 0.14), 0 16px 48px rgba(5, 13, 26, 0.10);
+  --shadow-navy: 0 4px 24px rgba(21, 48, 96, 0.25);
+
+  --transition: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ─── Reset ─────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--off-white);
+  color: var(--gray-800);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+/* ─── Scrollbar ──────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--navy-50); }
+::-webkit-scrollbar-thumb { background: var(--navy-300); border-radius: 99px; }
+
+/* ─── Utility Classes ────────────────────────────────────────────── */
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
+
+/* ─── Shared Button Styles ───────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border: none;
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: all var(--transition);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background: var(--navy-600);
+  color: var(--white);
+  box-shadow: 0 2px 8px rgba(30, 64, 128, 0.3);
+}
+.btn-primary:hover {
+  background: var(--navy-700);
+  box-shadow: var(--shadow-navy);
+  transform: translateY(-1px);
+}
+.btn-primary:active { transform: translateY(0); }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--navy-600);
+  border: 1.5px solid var(--navy-200);
+}
+.btn-ghost:hover {
+  background: var(--navy-50);
+  border-color: var(--navy-400);
+}
+
+.btn-danger {
+  background: var(--danger-light);
+  color: var(--danger);
+  border: 1.5px solid #fca5a5;
+}
+.btn-danger:hover {
+  background: var(--danger);
+  color: var(--white);
+}
+
+.btn-sm { padding: 6px 14px; font-size: 0.8125rem; }
+.btn-lg { padding: 14px 32px; font-size: 1rem; }
+
+/* ─── Keyframe Animations ────────────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse-ring {
+  0%   { box-shadow: 0 0 0 0 rgba(37, 85, 168, 0.4); }
+  70%  { box-shadow: 0 0 0 12px rgba(37, 85, 168, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(37, 85, 168, 0); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
