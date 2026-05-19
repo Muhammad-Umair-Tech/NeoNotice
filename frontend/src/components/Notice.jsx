@@ -37,7 +37,8 @@ function getInitials(name = "") {
 
 function hashName(name = "") {
   let h = 0;
-  for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) & 0xffffffff;
+  for (let i = 0; i < name.length; i++)
+    h = (h * 31 + name.charCodeAt(i)) & 0xffffffff;
   return Math.abs(h) % CATEGORY_COLORS.length;
 }
 
@@ -72,13 +73,6 @@ export default function Notice({ creator, postedAt, body, index = 0 }) {
       </div>
       <div className={styles.divider} />
       <p className={styles.body}>{body}</p>
-      <div className={styles.cardFooter}>
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/>
-          <circle cx="12" cy="10" r="3"/>
-        </svg>
-        <span>Posted on Physical Board</span>
-      </div>
     </article>
   );
 }

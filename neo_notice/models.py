@@ -17,7 +17,7 @@ class User(AbstractUser):
 
 class Notice(models.Model):
     creator = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name="notices")
-    body = models.TextField(max_length=1000)
+    body = models.TextField(max_length=100)
     posted_at = models.DateTimeField(auto_now_add=True)
     is_live = models.BooleanField(default=True)
 

@@ -73,7 +73,10 @@
   transition: all var(--transition);
 }
 
-.navItem:hover { color: var(--white); background: rgba(255,255,255,0.06); }
+.navItem:hover {
+  color: var(--white);
+  background: rgba(255, 255, 255, 0.06);
+}
 
 .navActive {
   background: rgba(59, 114, 212, 0.25) !important;
@@ -98,7 +101,7 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  border-top: 1px solid rgba(255,255,255,0.08);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
   padding-top: 20px;
   margin-top: 20px;
 }
@@ -124,9 +127,28 @@
   flex-shrink: 0;
 }
 
-.userInfo { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
-.userName { font-size: 0.875rem; font-weight: 600; color: var(--white); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.userRole { font-size: 0.7rem; color: var(--navy-300); text-transform: capitalize; letter-spacing: 0.05em; }
+.userInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.userName {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--white);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.userRole {
+  font-size: 0.7rem;
+  color: var(--navy-300);
+  text-transform: capitalize;
+  letter-spacing: 0.05em;
+}
 
 .sideBtn {
   display: flex;
@@ -134,8 +156,8 @@
   gap: 9px;
   width: 100%;
   padding: 10px 14px;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 9px;
   color: var(--navy-200);
   font-family: var(--font-body);
@@ -144,8 +166,17 @@
   cursor: pointer;
   transition: all var(--transition);
 }
-.sideBtn:hover { background: rgba(255,255,255,0.12); color: var(--white); }
-.sideBtnDanger:hover { background: rgba(220, 38, 38, 0.18); color: #fca5a5; border-color: rgba(220,38,38,0.3); }
+
+.sideBtn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--white);
+}
+
+.sideBtnDanger:hover {
+  background: rgba(220, 38, 38, 0.18);
+  color: #fca5a5;
+  border-color: rgba(220, 38, 38, 0.3);
+}
 
 .main {
   flex: 1;
@@ -196,7 +227,10 @@
   animation: spin 0.7s linear infinite;
 }
 
-.errText { color: var(--danger); font-weight: 500; }
+.errText {
+  color: var(--danger);
+  font-weight: 500;
+}
 
 .emptyIcon {
   width: 72px;
@@ -220,7 +254,8 @@
 
 .tableHeader {
   display: grid;
-  grid-template-columns: 2fr 1fr 1.2fr 0.7fr 1fr;
+  /* Notice takes 4 fractional shares, leaving metadata concise and anchored */
+  grid-template-columns: 4fr 1.2fr 1.4fr 1.2fr;
   gap: 16px;
   padding: 14px 24px;
   background: var(--navy-50);
@@ -234,22 +269,31 @@
 
 .tableRow {
   display: grid;
-  grid-template-columns: 2fr 1fr 1.2fr 0.7fr 1fr;
+  /* Matches header grid layouts perfectly */
+  grid-template-columns: 4fr 1.2fr 1.4fr 1.2fr;
   gap: 16px;
   padding: 16px 24px;
-  align-items: center;
+  align-items: start;
   border-bottom: 1px solid var(--gray-100);
   transition: background var(--transition);
   animation: fadeUp 0.35s ease both;
 }
 
-.tableRow:last-child { border-bottom: none; }
-.tableRow:hover { background: var(--navy-50); }
+.tableRow:last-child {
+  border-bottom: none;
+}
+
+.tableRow:hover {
+  background: var(--navy-50);
+}
 
 .noticeBody {
   font-size: 0.875rem;
   color: var(--gray-800);
   line-height: 1.5;
+  word-break: break-word;
+  white-space: pre-wrap;
+  padding-right: 12px;
 }
 
 .noticeCreator {
@@ -264,37 +308,21 @@
   color: var(--gray-400);
 }
 
-.badgeLive {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 0.725rem;
-  font-weight: 600;
-  padding: 3px 9px;
-  border-radius: 99px;
-  background: var(--success-light);
-  color: var(--success);
-  border: 1px solid #bbf7d0;
+.actions {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+
+.actions > button {
+  flex: 1;
+  justify-content: center;
   white-space: nowrap;
 }
 
-.badgeOff {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 0.725rem;
-  font-weight: 600;
-  padding: 3px 9px;
-  border-radius: 99px;
-  background: var(--gray-100);
-  color: var(--gray-400);
-  border: 1px solid var(--gray-200);
-  white-space: nowrap;
+.editBtn {
+  color: var(--navy-600) !important;
 }
-
-.actions { display: flex; gap: 8px; }
-
-.editBtn { color: var(--navy-600) !important; }
 
 .overlay {
   position: fixed;
@@ -350,7 +378,11 @@
   cursor: pointer;
   transition: all var(--transition);
 }
-.closeBtn:hover { background: var(--gray-100); color: var(--gray-800); }
+
+.closeBtn:hover {
+  background: var(--gray-100);
+  color: var(--gray-800);
+}
 
 .panelError {
   display: flex;
@@ -378,12 +410,10 @@
   font-weight: 500;
 }
 
-.panelField { display: flex; flex-direction: column; gap: 8px; }
-
-.panelLabel {
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: var(--gray-800);
+.panelField {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .textarea {
@@ -398,10 +428,12 @@
   resize: vertical;
   outline: none;
   line-height: 1.65;
-  transition: border-color var(--transition), box-shadow var(--transition);
+  transition:
+    border-color var(--transition),
+    box-shadow var(--transition);
   min-height: 160px;
 }
-.textarea::placeholder { color: var(--gray-400); }
+
 .textarea:focus {
   border-color: var(--navy-400);
   background: var(--white);
@@ -414,50 +446,9 @@
   color: var(--gray-400);
   text-align: right;
 }
-.charWarn { color: var(--danger); }
 
-.panelToggleRow {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 14px;
-  background: var(--navy-50);
-  border-radius: var(--radius-md);
-  border: 1.5px solid var(--navy-100);
-}
-
-.toggle {
-  width: 44px;
-  height: 24px;
-  border-radius: 99px;
-  background: var(--gray-200);
-  border: none;
-  cursor: pointer;
-  position: relative;
-  transition: background var(--transition);
-  flex-shrink: 0;
-  padding: 0;
-}
-.toggleOn { background: var(--navy-500); }
-
-.toggleKnob {
-  position: absolute;
-  top: 3px;
-  left: 3px;
-  width: 18px;
-  height: 18px;
-  background: var(--white);
-  border-radius: 50%;
-  transition: transform var(--transition);
-  display: block;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
-}
-.toggleOn .toggleKnob { transform: translateX(20px); }
-
-.toggleLabel {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--navy-700);
+.charWarn {
+  color: var(--danger);
 }
 
 .panelActions {
@@ -517,6 +508,7 @@
   font-style: italic;
   margin-bottom: 24px;
   text-align: left;
+  word-break: break-word;
 }
 
 .modalActions {
@@ -528,7 +520,7 @@
 .btnSpinner {
   width: 14px;
   height: 14px;
-  border: 2px solid rgba(255,255,255,0.3);
+  border: 2px solid rgba(255, 255, 255, 0.3);
   border-top-color: white;
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
@@ -536,25 +528,71 @@
 }
 
 @media (max-width: 900px) {
-  .sidebar { width: 200px; }
-  .tableHeader, .tableRow {
-    grid-template-columns: 2fr 0.8fr 1fr 0.6fr 1fr;
+  .sidebar {
+    width: 200px;
+  }
+  .tableHeader,
+  .tableRow {
+    grid-template-columns: 3.5fr 1fr 1.2fr 1.2fr;
   }
 }
 
 @media (max-width: 700px) {
-  .page { flex-direction: column; }
-  .sidebar { width: 100%; height: auto; position: static; flex-direction: row; flex-wrap: wrap; padding: 16px; }
-  .sideBottom { flex-direction: row; border-top: none; padding: 0; margin: 0; }
-  .userCard { display: none; }
-  .nav { padding: 8px; flex: none; }
-  .main { padding: 20px 16px; }
-  .tableHeader { display: none; }
+  .page {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: static;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px;
+  }
+
+  /* Treat both navigation and bottom action containers identically */
+  .nav,
+  .sideBottom {
+    flex: 1;
+    display: flex;
+    padding: 0;
+    margin: 0;
+    border-top: none;
+    min-width: 0; /* Prevents overflow strings from expanding the box */
+  }
+
+  /* Make both target items full-width inside their equal columns */
+  .navItem,
+  .sideBtn {
+    width: 100%;
+    justify-content: center;
+    box-sizing: border-box;
+    height: 40px; /* Optional: standardizes vertical height alignment */
+  }
+
+  .userCard {
+    display: none;
+  }
+
+  .main {
+    padding: 20px 16px;
+  }
+
+  .tableHeader {
+    display: none;
+  }
+
   .tableRow {
     grid-template-columns: 1fr;
     gap: 8px;
     padding: 16px;
     border-radius: 0;
   }
-  .panel { max-width: 100%; }
+
+  .panel {
+    max-width: 100%;
+  }
 }
