@@ -7,6 +7,7 @@ import requests
 
 from . import models
 
+ESP_IP = "http://192.168.100.184/get-notice"  # your ESP32 static IP
 
 def get_all_notices_for_esp(request):
     notices = []
@@ -155,7 +156,6 @@ def views_logout(request):
 
 
 
-ESP_IP = "http://192.168.100.184/get-notice"  # your ESP32 static IP
 
 def send_notice_to_esp(message):
     try:
