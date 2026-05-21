@@ -7,7 +7,6 @@ import requests
 
 from . import models
 
-ESP_IP = "http://192.168.100.184/get-notice"  # your ESP32 static IP
 
 def get_all_notices_for_esp(request):
     notices = []
@@ -47,9 +46,7 @@ def add_notices(request):
             is_live=is_Live
         )
         
-        # Send to ESP32 immediately after saving
-        if is_Live:
-            send_notice_to_esp(body)  # ← ADD THIS
+        
         
         return JsonResponse({"status": True}, status=200)
     return JsonResponse({"error": "POST request required"}, status=400)
@@ -82,9 +79,6 @@ def update_notices(request):
             notice.is_live = new_is_Live
             notice.save()
             
-            # Send updated notice to ESP32
-            if new_is_Live:
-                send_notice_to_esp(new_body)  # ← ADD THIS
             
             return JsonResponse({"status": True}, status=200)
         
@@ -106,8 +100,6 @@ def delete_notices(request):
         
         notice.delete()
         
-        # Notify ESP32 that notice was deleted
-        send_notice_to_esp("Notice removed")  # ← ADD THIS
         
         return JsonResponse({"success": True})
     
@@ -156,17 +148,3 @@ def views_logout(request):
 
 
 
-
-def send_notice_to_esp(message):
-    try:
-        response = requests.get(
-            ESP_IP, 
-            params={'message': message}, 
-            timeout=5
-        )
-        if response.status_code == 200:
-            print("Notice sent to ESP32 successfully")
-            return True
-    except requests.exceptions.RequestException as e:
-        print(f"Could not reach ESP32: {e}")
-        return False
