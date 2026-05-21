@@ -30,8 +30,13 @@ def update_admin_credentials(request):
         first_name = data.get("firstName") if data.get("firstName") != "" else curr_user.first_name
         last_name = data.get("lastName") if data.get("lastName") != "" else curr_user.last_name
         email = data.get("email") if data.get("email") != "" else curr_user.email
+        new_password = data.get("password") if data.get("password") != "" else curr_user.password
 
-        new_password = data.get("password")
+        if username == "admin":
+            return JsonResponse({"success": False, "error": "Username cannot be \'admin\'."}, status=400)
+        if new_password == "admin123":
+            return JsonResponse({"success": False, "error": "Password cannot be \'admin123\'."}, status=400)
+
         if new_password and new_password.strip() != "":
             try:
                 validate_password(new_password, user=curr_user)

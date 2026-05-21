@@ -135,7 +135,7 @@ export default function Login({ onSuccess, onBack }) {
 
         <div className={styles.headingBlock}>
           <h2 className={styles.heading}>
-            {dummyAdmin ? "Update Account Details" : "Welcome Back"}
+            {dummyAdmin ? "Update Account Details" : "Welcome Back."}
           </h2>
         </div>
 

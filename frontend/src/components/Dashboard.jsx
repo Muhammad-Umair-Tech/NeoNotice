@@ -250,7 +250,8 @@ export default function Dashboard({ user, onLogout, onProfileUpdate }) {
         }
       } else {
         setUpdateProfileError(
-          data.error || "Failed to update profile credentials.",
+          // data.error || "Failed to update profile credentials.",
+          data.error,
         );
       }
     } catch {
