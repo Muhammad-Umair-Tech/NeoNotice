@@ -13,7 +13,7 @@ import "./index.css";
 
 export default function App() {
   const [page, setPage] = useState("board");
-  const [user, setUser] = useState(null); // { username, role }
+  const [user, setUser] = useState(null); // { username }
 
   // On mount, restore session from sessionStorage
   useEffect(() => {
@@ -54,9 +54,7 @@ export default function App() {
 
   return (
     <div className="app-root">
-      {page === "board" && (
-        <Board onAdminClick={() => navigate("login")} />
-      )}
+      {page === "board" && <Board onAdminClick={() => navigate("login")} />}
       {page === "login" && (
         <Login
           onSuccess={handleLoginSuccess}
@@ -68,6 +66,11 @@ export default function App() {
           user={user}
           onLogout={handleLogout}
           onViewBoard={() => navigate("board")}
+          onProfileUpdate={(updatedUserData) => {
+            setUser(updatedUserData);
+            // Synchronize to sessionStorage so refresh/re-checks don't clear it
+            sessionStorage.setItem("nb_user", JSON.stringify(updatedUserData));
+          }}
         />
       )}
       {/* Redirect to login if dashboard accessed without user */}

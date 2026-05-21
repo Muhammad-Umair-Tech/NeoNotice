@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import styles from "../styles./Dashboard.module.css";
+import styles from "../styles/Dashboard.module.css";
+import profileStyles from "../styles/UpdateProfile.module.css";
 
 const MAX_CHARS = 100;
 
@@ -27,7 +28,8 @@ function formatDate(raw) {
   );
 }
 
-export default function Dashboard({ user, onLogout }) {
+// Added onProfileUpdate prop to dynamically update parent's user object state
+export default function Dashboard({ user, onLogout, onProfileUpdate }) {
   const [notices, setNotices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -45,7 +47,32 @@ export default function Dashboard({ user, onLogout }) {
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [deleting, setDeleting] = useState(false);
 
+  const [showUpdateProfilePanel, setShowUpdateProfilePanel] = useState(false);
+  const [updateProfileFields, setUpdateProfileFields] = useState({
+    username: user?.username || "",
+    password: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+  });
+  const [updateProfileSaving, setUpdateProfileSaving] = useState(false);
+  const [updateProfileError, setUpdateProfileError] = useState(null);
+  const [updateProfileSuccess, setUpdateProfileSuccess] = useState(false);
+
   const textareaRef = useRef(null);
+
+  // Sync update fields whenever the user object changes or side panel opens
+  useEffect(() => {
+    if (user) {
+      setUpdateProfileFields((prev) => ({
+        ...prev,
+        username: user.username || "",
+        firstName: user.firstName || "",
+        lastName: user.lastName || "",
+        email: user.email || "",
+      }));
+    }
+  }, [user, showUpdateProfilePanel]);
 
   const fetchNotices = async () => {
     setLoading(true);
@@ -74,7 +101,7 @@ export default function Dashboard({ user, onLogout }) {
   };
 
   const openEdit = (notice) => {
-    setFormBody(notice.body);
+    setFormBody(notice.body || "");
     setFormError(null);
     setFormSuccess(null);
     setCompose({ open: true, mode: "edit", notice });
@@ -183,6 +210,56 @@ export default function Dashboard({ user, onLogout }) {
     }
   };
 
+  const handleUpdateProfileChange = (e) => {
+    setUpdateProfileError(null);
+    setUpdateProfileSuccess(false);
+    setUpdateProfileFields({
+      ...updateProfileFields,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleUpdateProfileSubmit = async (e) => {
+    e.preventDefault();
+    setUpdateProfileSaving(true);
+    try {
+      const response = await fetch("/update_admin", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": getCsrfToken() || "",
+        },
+        body: JSON.stringify(updateProfileFields),
+      });
+      const data = await response.json();
+      if (data.success) {
+        setUpdateProfileSuccess(true);
+        setUpdateProfileFields({ ...updateProfileFields, password: "" });
+
+        const updatedUserPayload = {
+          ...user,
+          username: updateProfileFields.username,
+          firstName: updateProfileFields.firstName,
+          lastName: updateProfileFields.lastName,
+          email: updateProfileFields.email,
+        };
+
+        // Notify parent state handler to propagate updated user attributes down
+        if (onProfileUpdate) {
+          onProfileUpdate(updatedUserPayload);
+        }
+      } else {
+        setUpdateProfileError(
+          data.error || "Failed to update profile credentials.",
+        );
+      }
+    } catch {
+      setUpdateProfileError("An error occurred.");
+    } finally {
+      setUpdateProfileSaving(false);
+    }
+  };
+
   const charsLeft = MAX_CHARS - formBody.length;
 
   return (
@@ -223,33 +300,34 @@ export default function Dashboard({ user, onLogout }) {
 
         <div className={styles.sideBottom}>
           <div className={styles.userCard}>
+            {/* dynamic upper-cased initials react layout setup */}
             <div className={styles.userAvatar}>
-              {user.username?.charAt(0).toUpperCase()}
+              {user?.username ? user.username.charAt(0).toUpperCase() : "A"}
             </div>
             <div className={styles.userInfo}>
-              <span className={styles.userName}>{user.username}</span>
-              <span className={styles.userRole}>{user.role}</span>
+              <span className={styles.userName}>
+                {user?.username || "Admin"}
+              </span>
             </div>
           </div>
 
-          <button
-            className={`${styles.sideBtn} ${styles.sideBtnDanger}`}
-            onClick={onLogout}
-          >
-            <svg
-              width="15"
-              height="15"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
+          <div className={styles.actionGroup}>
+            <button
+              className={styles.dashboardBtn}
+              onClick={() => setShowUpdateProfilePanel(true)}
             >
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-              <polyline points="16 17 21 12 16 7" />
-              <line x1="21" y1="12" x2="9" y2="12" />
-            </svg>
-            Log Out
-          </button>
+              Update Profile
+            </button>
+            <button
+              className={styles.dashboardBtn}
+              onClick={() => alert("Coming soon.")}
+            >
+              Add New Admin
+            </button>
+            <button className={styles.dashboardBtn} onClick={onLogout}>
+              Log Out
+            </button>
+          </div>
         </div>
       </aside>
 
@@ -395,7 +473,7 @@ export default function Dashboard({ user, onLogout }) {
                 {compose.mode === "add" ? "Post New Notice" : "Edit Notice"}
               </h3>
               <button
-                className={styles.closeBtn}
+                className={profileStyles.closeBtn}
                 onClick={closeCompose}
                 aria-label="Close"
               >
@@ -412,7 +490,6 @@ export default function Dashboard({ user, onLogout }) {
                 </svg>
               </button>
             </div>
-
             {formError && (
               <div className={styles.panelError}>
                 <svg
@@ -429,7 +506,6 @@ export default function Dashboard({ user, onLogout }) {
                 {formError}
               </div>
             )}
-
             {formSuccess && (
               <div className={styles.panelSuccess}>
                 <svg
@@ -445,7 +521,6 @@ export default function Dashboard({ user, onLogout }) {
                 {formSuccess}
               </div>
             )}
-
             <div className={styles.panelField}>
               <label className={styles.panelLabel}>Notice Content</label>
               <textarea
@@ -467,7 +542,6 @@ export default function Dashboard({ user, onLogout }) {
                 {charsLeft} characters remaining
               </div>
             </div>
-
             <div className={styles.panelActions}>
               <button
                 className="btn btn-ghost"
@@ -572,6 +646,134 @@ export default function Dashboard({ user, onLogout }) {
                 )}
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {showUpdateProfilePanel && (
+        <div
+          className={profileStyles.sidebarOverlay}
+          onClick={() => setShowUpdateProfilePanel(false)}
+        >
+          <div
+            className={profileStyles.sidebarContent}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* FIXED CLOSE BUTTON HANDLER LINKAGE */}
+            <button
+              className={profileStyles.closeBtn}
+              onClick={() => setShowUpdateProfilePanel(false)}
+              aria-label="Close"
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+              >
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+
+            <h3 className={profileStyles.sidebarHeading}>
+              Update Profile Credentials
+            </h3>
+            <p className={styles.sidebarSubheading}>
+              Fill in the fields you want to change. Empty fields will be
+              retained.
+            </p>
+
+            {updateProfileError && (
+              <div className={profileStyles.profileErrorAlert}>
+                {updateProfileError}
+              </div>
+            )}
+            {updateProfileSuccess && (
+              <div className={profileStyles.profileSuccessAlert}>
+                Profile saved successfully!
+              </div>
+            )}
+
+            <form
+              onSubmit={handleUpdateProfileSubmit}
+              className={profileStyles.profileForm}
+              noValidate
+            >
+              <div className={profileStyles.fieldGroup}>
+                <label htmlFor="profileUsername">Username</label>
+                <input
+                  id="profileUsername"
+                  type="text"
+                  name="username"
+                  placeholder={user?.username || "Enter username"} // Display full original username placeholder context dynamically
+                  value={updateProfileFields.username}
+                  onChange={handleUpdateProfileChange}
+                  disabled={updateProfileSaving}
+                  required
+                />
+              </div>
+
+              <div className={profileStyles.fieldGroup}>
+                <label htmlFor="profilePassword">New Password</label>
+                <input
+                  id="profilePassword"
+                  type="password"
+                  name="password"
+                  placeholder="Enter a strong password"
+                  value={updateProfileFields.password}
+                  onChange={handleUpdateProfileChange}
+                  disabled={updateProfileSaving}
+                  required
+                />
+              </div>
+
+              <div className={profileStyles.fieldGroup}>
+                <label htmlFor="profileFirstName">First Name</label>
+                <input
+                  id="profileFirstName"
+                  type="text"
+                  name="firstName"
+                  value={updateProfileFields.firstName}
+                  onChange={handleUpdateProfileChange}
+                  disabled={updateProfileSaving}
+                />
+              </div>
+
+              <div className={profileStyles.fieldGroup}>
+                <label htmlFor="profileLastName">Last Name</label>
+                <input
+                  id="profileLastName"
+                  type="text"
+                  name="lastName"
+                  value={updateProfileFields.lastName}
+                  onChange={handleUpdateProfileChange}
+                  disabled={updateProfileSaving}
+                />
+              </div>
+
+              <div className={profileStyles.fieldGroup}>
+                <label htmlFor="profileEmail">Email Address</label>
+                <input
+                  id="profileEmail"
+                  type="email"
+                  name="email"
+                  value={updateProfileFields.email}
+                  onChange={handleUpdateProfileChange}
+                  disabled={updateProfileSaving}
+                />
+              </div>
+
+              <button
+                type="submit"
+                className={profileStyles.saveProfileBtn}
+                disabled={updateProfileSaving}
+              >
+                {updateProfileSaving ? "Saving Changes..." : "Save Credentials"}
+              </button>
+            </form>
           </div>
         </div>
       )}

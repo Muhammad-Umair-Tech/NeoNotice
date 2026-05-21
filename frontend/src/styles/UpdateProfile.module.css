@@ -1,0 +1,154 @@
+/* src/styles/UpdateProfile.module.css */
+
+.sidebarOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 13, 26, 0.55);
+  backdrop-filter: blur(4px);
+  z-index: 250;
+  display: flex;
+  justify-content: flex-end;
+  animation: fadeIn 0.25s ease both;
+}
+
+.sidebarContent {
+  width: 100%;
+  max-width: 460px;
+  height: 100vh;
+  background: var(--white, #ffffff);
+  padding: 36px 32px;
+  box-shadow: -8px 0 32px rgba(5, 13, 26, 0.15);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow-y: auto;
+}
+
+.closeBtn {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: var(--gray-400, #94a3b8);
+  cursor: pointer;
+  line-height: 1;
+  transition: color 0.15s ease;
+}
+
+.closeBtn:hover {
+  color: var(--danger, #ef4444);
+}
+
+.sidebarHeading {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--navy-900, #0f172a);
+  margin: 0 0 6px 0;
+}
+
+.sidebarSubheading {
+  font-size: 0.85rem;
+  color: var(--gray-400, #64748b);
+  margin: 0 0 24px 0;
+}
+
+.profileForm {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fieldGroup label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--navy-700, #334155);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.fieldGroup input {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1.5px solid var(--gray-200, #cbd5e1);
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-size: 0.925rem;
+  color: #334155;
+  background-color: #ffffff;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.fieldGroup input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.fieldGroup input:disabled {
+  background-color: var(--off-white, #f8fafc);
+  color: #94a3b8;
+  cursor: not-allowed;
+}
+
+.saveProfileBtn {
+  background-color: #2563eb;
+  color: #ffffff;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.95rem;
+  border: none;
+  border-radius: 8px;
+  padding: 13px;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background-color 0.15s ease;
+}
+
+.saveProfileBtn:hover:not(:disabled) {
+  background-color: #1d4ed8;
+}
+
+.saveProfileBtn:disabled {
+  background-color: #94a3b8;
+  cursor: not-allowed;
+}
+
+.profileErrorAlert {
+  background-color: #fee2e2;
+  color: #b91c1c;
+  padding: 12px 14px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: 1px solid #fca5a5;
+}
+
+.profileSuccessAlert {
+  background-color: #dcfce7;
+  color: #15803d;
+  padding: 12px 14px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: 1px solid #bbf7d0;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

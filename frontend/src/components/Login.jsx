@@ -1,15 +1,32 @@
 import { useState } from "react";
-import styles from "../styles./Login.module.css";
+import styles from "../styles/Login.module.css";
 
 export default function Login({ onSuccess, onBack }) {
   const [fields, setFields] = useState({ username: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [showPass, setShowPass] = useState(false);
+  const [dummyAdmin, setDummyAdmin] = useState(false);
+
+  const [updatedCredentials, setUpdatedCredentials] = useState({
+    username: "",
+    password: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+  });
 
   const handleChange = (e) => {
     setError(null);
     setFields((f) => ({ ...f, [e.target.name]: e.target.value }));
+  };
+
+  const handleUpdateChange = (e) => {
+    setError(null);
+    setUpdatedCredentials((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -39,17 +56,46 @@ export default function Login({ onSuccess, onBack }) {
       const data = await res.json();
 
       if (data.success) {
-        if (data.role !== "admin" && data.role !== "Admin") {
-          setError("Access denied. Only admin accounts can log in here.");
-          setLoading(false);
-          return;
+        if (data.username === "admin") {
+          setDummyAdmin(true);
+        } else {
+          onSuccess({ username: data.username });
         }
-        onSuccess({ username: data.username, role: data.role });
       } else {
         setError(data.error || "Login failed. Please try again.");
       }
     } catch {
       setError("Network error. Please check your connection.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateCredentials = async (e) => {
+    e.preventDefault();
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const res = await fetch("/update_admin", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": getCsrfToken(),
+        },
+        body: JSON.stringify(updatedCredentials),
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        onSuccess({ username: data.username });
+      } else {
+        setError(data.error || "An error occurred while updating credentials.");
+      }
+    } catch {
+      setError("Network error. Failed to update credentials.");
     } finally {
       setLoading(false);
     }
@@ -74,6 +120,7 @@ export default function Login({ onSuccess, onBack }) {
           </svg>
           Back to Board
         </button>
+
         <div className={styles.brand}>
           <div className={styles.logoMark}>
             <svg width="32" height="32" viewBox="0 0 28 28" fill="none">
@@ -85,12 +132,34 @@ export default function Login({ onSuccess, onBack }) {
           <h1 className={styles.brandName}>NEO NOTICE</h1>
           <p className={styles.brandSub}>Admin Portal</p>
         </div>
+
         <div className={styles.headingBlock}>
-          <h2 className={styles.heading}>Welcome back</h2>
-          <p className={styles.subheading}>
-            Log in to manage the department notice board
-          </p>
+          <h2 className={styles.heading}>
+            {dummyAdmin ? "Update Account Details" : "Welcome Back"}
+          </h2>
         </div>
+
+        {dummyAdmin && !error && (
+          <div className={styles.infoAlert} role="status">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="16" x2="12" y2="12" />
+              <line x1="12" y1="8" x2="12.01" y2="8" />
+            </svg>
+            <span>
+              Logged in with temporary admin access. Please personalize your
+              credentials now.
+            </span>
+          </div>
+        )}
+
         {error && (
           <div className={styles.errorAlert} role="alert">
             <svg
@@ -108,130 +177,247 @@ export default function Login({ onSuccess, onBack }) {
             {error}
           </div>
         )}
-        <form className={styles.form} onSubmit={handleSubmit} noValidate>
-          <div className={styles.field}>
-            <label className={styles.label} htmlFor="username">
-              Username
-            </label>
-            <div className={styles.inputWrap}>
-              <svg
-                className={styles.inputIcon}
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <circle cx="12" cy="8" r="4" />
-                <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
-              </svg>
-              <input
-                className={styles.input}
-                id="username"
-                name="username"
-                type="text"
-                value={fields.username}
-                onChange={handleChange}
-                placeholder="Enter your username"
-                autoComplete="username"
-                autoFocus
-                disabled={loading}
-              />
-            </div>
-          </div>
 
-          <div className={styles.field}>
-            <label className={styles.label} htmlFor="password">
-              Password
-            </label>
-            <div className={styles.inputWrap}>
-              <svg
-                className={styles.inputIcon}
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <rect x="3" y="11" width="18" height="11" rx="2" />
-                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-              </svg>
-              <input
-                className={styles.input}
-                id="password"
-                name="password"
-                type={showPass ? "text" : "password"}
-                value={fields.password}
-                onChange={handleChange}
-                placeholder="Enter your password"
-                autoComplete="current-password"
-                disabled={loading}
-              />
-              <button
-                type="button"
-                className={styles.eyeBtn}
-                onClick={() => setShowPass((v) => !v)}
-                tabIndex={-1}
-                aria-label={showPass ? "Hide password" : "Show password"}
-              >
-                {showPass ? (
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
-                    <line x1="1" y1="1" x2="23" y2="23" />
-                  </svg>
-                ) : (
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path d="M1 12S5 4 12 4s11 8 11 8-4 8-11 8S1 12 1 12z" />
-                    <circle cx="12" cy="12" r="3" />
-                  </svg>
-                )}
-              </button>
-            </div>
-          </div>
-
-          <button
-            type="submit"
-            className={`${styles.submitBtn} ${loading ? styles.loading : ""}`}
-            disabled={loading}
-          >
-            {loading ? (
-              <>
-                <span className={styles.spinner} />
-                Logging In…
-              </>
-            ) : (
-              <>
-                Log In
+        {!dummyAdmin ? (
+          <form className={styles.form} onSubmit={handleSubmit} noValidate>
+            <div className={styles.field}>
+              <label className={styles.label} htmlFor="username">
+                Username
+              </label>
+              <div className={styles.inputWrap}>
                 <svg
+                  className={styles.inputIcon}
                   width="16"
                   height="16"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth="2.2"
+                  strokeWidth="2"
                 >
-                  <path d="M5 12h14M12 5l7 7-7 7" />
+                  <circle cx="12" cy="8" r="4" />
+                  <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
                 </svg>
-              </>
-            )}
-          </button>
-        </form>
+                <input
+                  className={styles.input}
+                  id="username"
+                  name="username"
+                  type="text"
+                  value={fields.username}
+                  onChange={handleChange}
+                  placeholder="Enter your username"
+                  autoComplete="username"
+                  autoFocus
+                  disabled={loading}
+                />
+              </div>
+            </div>
+
+            <div className={styles.field}>
+              <label className={styles.label} htmlFor="password">
+                Password
+              </label>
+              <div className={styles.inputWrap}>
+                <svg
+                  className={styles.inputIcon}
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <rect x="3" y="11" width="18" height="11" rx="2" />
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
+                <input
+                  className={styles.input}
+                  id="password"
+                  name="password"
+                  type={showPass ? "text" : "password"}
+                  value={fields.password}
+                  onChange={handleChange}
+                  placeholder="Enter your password"
+                  autoComplete="current-password"
+                  disabled={loading}
+                />
+                <button
+                  type="button"
+                  className={styles.eyeBtn}
+                  onClick={() => setShowPass((v) => !v)}
+                  tabIndex={-1}
+                  aria-label={showPass ? "Hide password" : "Show password"}
+                >
+                  {showPass ? (
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+                      <line x1="1" y1="1" x2="23" y2="23" />
+                    </svg>
+                  ) : (
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <path d="M1 12S5 4 12 4s11 8 11 8-4 8-11 8S1 12 1 12z" />
+                      <circle cx="12" cy="12" r="3" />
+                    </svg>
+                  )}
+                </button>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              className={styles.submitBtn}
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <span className={styles.spinner} />
+                  Logging In…
+                </>
+              ) : (
+                <>
+                  Log In
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.2"
+                  >
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                  </svg>
+                </>
+              )}
+            </button>
+          </form>
+        ) : (
+          <form className={styles.form} onSubmit={updateCredentials} noValidate>
+            <div className={styles.field}>
+              <label className={styles.label} htmlFor="newUsername">
+                New Admin Username
+              </label>
+              <input
+                id="newUsername"
+                name="username"
+                className={styles.input}
+                type="text"
+                placeholder="e.g., system_admin"
+                onChange={handleUpdateChange}
+                value={updatedCredentials.username}
+                disabled={loading}
+                required
+              />
+            </div>
+
+            <div className={styles.field}>
+              <label className={styles.label} htmlFor="newPassword">
+                New Password
+              </label>
+              <input
+                id="newPassword"
+                name="password"
+                className={styles.input}
+                type="password"
+                placeholder="Choose a strong password"
+                onChange={handleUpdateChange}
+                value={updatedCredentials.password}
+                disabled={loading}
+                required
+              />
+            </div>
+
+            <div className={styles.field}>
+              <label className={styles.label} htmlFor="firstName">
+                First Name
+              </label>
+              <input
+                id="firstName"
+                name="firstName"
+                className={styles.input}
+                type="text"
+                placeholder="John"
+                onChange={handleUpdateChange}
+                value={updatedCredentials.firstName}
+                disabled={loading}
+                required
+              />
+            </div>
+
+            <div className={styles.field}>
+              <label className={styles.label} htmlFor="lastName">
+                Last Name
+              </label>
+              <input
+                id="lastName"
+                name="lastName"
+                className={styles.input}
+                type="text"
+                placeholder="Doe"
+                onChange={handleUpdateChange}
+                value={updatedCredentials.lastName}
+                disabled={loading}
+                required
+              />
+            </div>
+
+            <div className={styles.field}>
+              <label className={styles.label} htmlFor="email">
+                Email Address
+              </label>
+              <input
+                id="email"
+                name="email"
+                className={styles.input}
+                type="email"
+                placeholder="admin@domain.com"
+                onChange={handleUpdateChange}
+                value={updatedCredentials.email}
+                disabled={loading}
+                required
+              />
+            </div>
+
+            <button
+              type="submit"
+              className={styles.submitBtn}
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <span className={styles.spinner} />
+                  Updating Details…
+                </>
+              ) : (
+                <>
+                  Save & Proceed{" "}
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.2"
+                  >
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                  </svg>
+                </>
+              )}
+            </button>
+          </form>
+        )}
 
         <p className={styles.helpText}>
           This portal is restricted to department administrators only.
