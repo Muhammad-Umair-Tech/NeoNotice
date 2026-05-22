@@ -319,12 +319,6 @@ export default function Dashboard({ user, onLogout, onProfileUpdate }) {
             >
               Update Profile
             </button>
-            <button
-              className={styles.dashboardBtn}
-              onClick={() => alert("Coming soon.")}
-            >
-              Add New Admin
-            </button>
             <button className={styles.dashboardBtn} onClick={onLogout}>
               Log Out
             </button>
