@@ -168,3 +168,10 @@ def views_signup(request):
 def views_logout(request):
     auth_logout(request)
     return JsonResponse({"success": True, "message": "Logging out successful."})
+
+
+def get_all_notices_for_esp(request):
+    notices = []
+    for notice in models.Notice.objects.filter(is_live=True):
+        notices.append(notice.body)
+    return JsonResponse({"notices": notices})
