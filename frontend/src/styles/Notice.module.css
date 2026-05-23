@@ -1,15 +1,13 @@
 .card {
   background: var(--white);
-  border: 1.5px solid var(--card-border, var(--gray-200));
+  border: 1.5px solid var(--card-border, #94a3b8);   
   border-radius: var(--radius-lg);
   padding: 0;
   box-shadow: var(--shadow-card);
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition:
-    transform var(--transition),
-    box-shadow var(--transition);
+  transition: all var(--transition);
   animation: fadeUp 0.5s ease both;
   position: relative;
 }
@@ -20,11 +18,10 @@
 }
 
 .accentBar {
-  height: 4px;
-  background: var(--card-accent, var(--navy-500));
+  height: 5px;                    
+  background: var(--card-accent, #1e40af);   
   flex-shrink: 0;
 }
-
 .cardHeader {
   display: flex;
   align-items: center;
@@ -70,26 +67,25 @@
   color: var(--gray-400);
   letter-spacing: 0.02em;
 }
-
 .noticeBadge {
   font-family: var(--font-mono);
-  font-size: 0.625rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  color: var(--card-accent, var(--navy-500));
-  background: var(--card-bg, var(--navy-50));
-  border: 1px solid var(--card-border, var(--navy-100));
-  padding: 3px 8px;
-  border-radius: 4px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #ffffff;                          
+  background: var(--card-accent, #1e40af); 
+  border: 1px solid var(--card-accent, #1e40af);
+  padding: 4px 10px;
+  border-radius: 6px;
   flex-shrink: 0;
+  box-shadow: 0 1px 3px rgba(30, 64, 175, 0.2);
 }
-
 .divider {
-  height: 1px;
-  background: var(--gray-100);
+  height: 2px;                          
+  background: var(--gray-200);          
   margin: 14px 20px;
+  border-radius: 2px;                   
 }
-
 .body {
   font-size: 0.9375rem;
   line-height: 1.72;

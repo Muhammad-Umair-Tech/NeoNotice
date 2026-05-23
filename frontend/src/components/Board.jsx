@@ -141,7 +141,7 @@ export default function Board({ onAdminClick }) {
       <footer className={styles.footer}>
         <span>NEO NOTICE BOARD</span>
         <span>·</span>
-        <span>Computer Organization & Assembly Language Project</span>
+        <span>View the Department Notices</span>
       </footer>
     </div>
   );
