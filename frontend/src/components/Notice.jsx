@@ -1,13 +1,11 @@
 import styles from "../styles./Notice.module.css";
-
 const CATEGORY_COLORS = [
-  { bg: "#eff6ff", border: "#bfdbfe", accent: "#2563eb" },
-  { bg: "#f0fdf4", border: "#bbf7d0", accent: "#16a34a" },
-  { bg: "#fffbeb", border: "#fde68a", accent: "#d97706" },
-  { bg: "#fdf4ff", border: "#e9d5ff", accent: "#7c3aed" },
-  { bg: "#fff1f2", border: "#fecdd3", accent: "#e11d48" },
+  { bg: "#f0f9ff", border: "#bae6fd", accent: "#0c4a6e" },
+  { bg: "#e0f2fe", border: "#bae6fd", accent: "#1e40af" },
+  { bg: "#dbeafe", border: "#bfdbfe", accent: "#1e3a8a" },
+  { bg: "#e6e6ff", border: "#c4c4ff", accent: "#312e81" },
+  { bg: "#f1f5f9", border: "#cbd5e1", accent: "#1e2937" },
 ];
-
 function formatDate(rawDate) {
   if (!rawDate) return "—";
   const d = new Date(rawDate);
@@ -59,9 +57,7 @@ export default function Notice({ creator, postedAt, body, index = 0 }) {
       <div className={styles.accentBar} />
 
       <div className={styles.cardHeader}>
-        <div className={styles.avatar} style={{ background: colorSet.accent }}>
-          {initials || "?"}
-        </div>
+        
         <div className={styles.meta}>
           <span className={styles.creator}>{creator || "Department"}</span>
           <span className={styles.timestamp}>

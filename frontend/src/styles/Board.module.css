@@ -1,4 +1,4 @@
-/* ─── Board Page ─────────────────────────────────────────────────── */
+
 .page {
   min-height: 100vh;
   display: flex;
@@ -8,7 +8,6 @@
     radial-gradient(ellipse 80% 50% at 50% -20%, rgba(30, 64, 128, 0.08) 0%, transparent 70%);
 }
 
-/* ─── Header ─────────────────────────────────────────────────────── */
 .header {
   background: linear-gradient(135deg, var(--navy-800) 0%, var(--navy-600) 100%);
   color: var(--white);
@@ -124,12 +123,12 @@
 .liveDot {
   width: 7px;
   height: 7px;
-  background: #4ade80;
+  background: #ffffff;           
   border-radius: 50%;
   flex-shrink: 0;
   animation: pulse-ring 2s infinite;
+  box-shadow: 0 0 4px rgba(255, 255, 255, 0.8);   
 }
-
 .countChip {
   margin-left: auto;
   background: rgba(255, 255, 255, 0.1);
@@ -138,7 +137,6 @@
   border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-/* ─── Main ───────────────────────────────────────────────────────── */
 .main {
   flex: 1;
   max-width: 1200px;
@@ -147,14 +145,12 @@
   padding: 40px 32px;
 }
 
-/* ─── Notice Grid ────────────────────────────────────────────────── */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
   gap: 24px;
 }
 
-/* ─── State Containers ───────────────────────────────────────────── */
 .stateContainer {
   display: flex;
   justify-content: center;
@@ -162,7 +158,6 @@
   min-height: 400px;
 }
 
-/* Skeleton loading */
 .skeletonGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
@@ -178,7 +173,6 @@
   animation: shimmer 1.4s infinite;
 }
 
-/* Error box */
 .errorBox {
   text-align: center;
   display: flex;
@@ -197,7 +191,6 @@
   font-size: 0.9375rem;
 }
 
-/* Empty state */
 .emptyState {
   text-align: center;
   display: flex;
@@ -232,7 +225,6 @@
   line-height: 1.7;
 }
 
-/* ─── Footer ─────────────────────────────────────────────────────── */
 .footer {
   text-align: center;
   padding: 20px;
@@ -248,7 +240,7 @@
   font-family: var(--font-mono);
 }
 
-/* ─── Responsive ─────────────────────────────────────────────────── */
+
 @media (max-width: 640px) {
   .headerInner { padding: 16px 20px; }
   .liveBanner { padding: 8px 20px; }
