@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Notice from "./Notice";
-import styles from "../styles./Board.module.css";
+import styles from "../styles/Board.module.css";
 
 export default function Board({ onAdminClick }) {
   const [state, setState] = useState({
