@@ -1,5 +1,14 @@
 # NeoNotice
 
+![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)
+![Django](https://img.shields.io/badge/Django-5.2.4-092E20?logo=django&logoColor=white)
+![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)
+![Vite](https://img.shields.io/badge/Vite-build-646CFF?logo=vite&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-database-003B57?logo=sqlite&logoColor=white)
+![ESP32](https://img.shields.io/badge/ESP32-firmware-E7352C?logo=espressif&logoColor=white)
+![Arduino](https://img.shields.io/badge/Arduino-framework-00878F?logo=arduino&logoColor=white)
+![PlatformIO](https://img.shields.io/badge/PlatformIO-build-FF7F00?logo=platformio&logoColor=white)
+
 NeoNotice is a connected digital notice-board system for departments, institutions, and organizations.
 
 It provides a web application for publishing and managing notices, together with an ESP32-based hardware display that retrieves active notices from the server and displays them on a 20×4 I2C LCD.
